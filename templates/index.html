@@ -12,23 +12,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <py-config>
+        packages = [
+          "matplotlib",
+          "numpy"
+        ]
+    </py-config>
 </head>
-<body class="bg-gray-100 text-gray-800 h-screen overflow-hidden">
+<body class="bg-gray-100 text-gray-800 h-screen w-screen overflow-hidden">
     <script src="static/js/scripts.js"></script>
 
-    <div class="h-full flex flex-col">
+    <div class="h-full flex flex-col max-w-full">
         <h1 class="text-3xl font-bold mb-4 text-center flex-shrink-0">Simple Co-Pilot</h1>
         <button onclick="toggleSidebar()" class="bg-blue-500 text-white px-4 py-2 rounded absolute mb-4 top-2 right-4">Show Renderer</button>
 
-        <div class="flex-grow flex overflow-hidden space-x-4">
-            <div class="flex-1 flex space-x-4">
+        <div id="needs-to-max-screen" class="flex-grow flex overflow-hidden space-x-4 max-w-full">
+            <div class="flex-1 flex space-x-4 overflow-hidden">
                 <div id="chat" class="w-1/2 flex flex-col p-4 bg-gray-200 rounded overflow-hidden">
                     <div class="flex-shrink-0">
                         <textarea id="chat-input" class="w-full h-24 p-2 border border-gray-300 rounded mb-4" placeholder="Chat with ChatGPT..."></textarea>
                         <button onclick="chatWithGPT()" class="bg-green-500 text-white px-4 py-2 rounded">Send</button>
                     </div>
-                    <div class="flex-grow mt-4">
-                        <pre id="chat-output" class="bg-gray-800 text-white p-4 rounded overflow-y-auto h-[600px]"></pre>
+                    <div class="mt-4 overflow-hidden">
+                        <pre id="chat-output" class="bg-gray-800 text-white p-4 rounded h-[600px] overflow-y-auto overflow-x-auto"></pre>
                         <div id="code-status" class="text-center p-4"></div>
                     </div>
                 </div>
@@ -37,13 +43,14 @@
                         <textarea id="python-code" class="w-full h-24 p-2 border border-gray-300 rounded mb-4" placeholder="Write Python code here..."></textarea>
                         <button onclick="runPythonCode()" class="bg-blue-500 text-white px-4 py-2 rounded">Run Python</button>
                     </div>
-                    <div class="flex-grow mt-4">
+                    <div class="mt-4">
                         <pre id="python-output" class="bg-gray-800 text-white p-4 rounded overflow-y-auto h-[600px]"></pre>
                     </div>
                 </div>
             </div>
-            <div id="renderer-container" class="flex items-center justify-center bg-gray-200 rounded p-6">
-                <canvas id="canvas" width="600" height="600" style="border: 1px solid black;"></canvas>
+            <div id="renderer-container" class="flex items-center justify-center bg-gray-200 rounded p-6 flex-shrink-0">
+                <canvas id="viewport" width="800" height="800" style="border: 1px solid black;"></canvas>
+                <script src="static/js/webgl.js"></script>
             </div>
         </div>
         <div id="error-popover" class="popover"></div>

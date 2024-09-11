@@ -2,7 +2,8 @@
 const runPythonCode = async () => {
     const pyodide = await loadPyodide(); 
     await pyodide.loadPackage("matplotlib");
-    const code = document.getElementById('python-code').value;
+    await pyodide.loadPackage("numpy");
+    const code = "from pyodide.ffi import create_proxy\nfrom js import webgl_add_vertex, webgl_render_scene\n" + document.getElementById('python-code').value;
     const outputElement = document.getElementById('python-output');
     const errorPopover = document.getElementById('error-popover');
 
@@ -67,7 +68,7 @@ async function chatWithGPT() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prompt: "You are a specialist copilot to write matplotlib code for procedural generation. Here's what your user asked for: " + chatInput })
+            body: JSON.stringify({ prompt: "Here's what your user asked for: " + chatInput })
         });
 
         const result = await response.json();
@@ -126,9 +127,9 @@ async function chatWithGPT() {
 
             // Update code status based on whether any Python code was detected
             if (lineRanges.length > 0) {
-                codeStatus.outerHTML = `<div id="code-status" class="text-center p-4 border bg-blue"><span style="color: white;">Code Detected</span></div>`;
+                codeStatus.outerHTML = `<div id="code-status" class="text-center p-4"><span class='text-blue-400'>Code Detected</span></div>`;
             } else {
-                codeStatus.outerHTML = `<div id="code-status" class="text-center p-4 border bg-gray-200"><span class="text-gray-800">Code Not Detected</span></div>`;
+                codeStatus.outerHTML = `<div id="code-status" class="text-center p-4"><span class="text-gray-800">Code Not Detected</span></div>`;
             }
 
         } else {
@@ -165,7 +166,7 @@ const extractPythonCodeLineRanges = (response) => {
         let isCode = false;
 
         const pythonStartPattern = /^(import|from|def|class|\s*#)/; // Recognize typical Python starts
-        const pythonContinuePattern = /^[ \t]|^(import|from|def|class|for|if|while|with|try|except|return|yield|else|elif|[a-zA-Z_]\w*\s*=\s*[^=])/; // Added variable assignment detection
+        const pythonContinuePattern = /^[ \t]|^(import|from|def|class|for|if|while|with|try|except|return|yield|else|elif|[a-zA-Z_]\w*\s*=\s*[^=]|\b[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*\s*\(\s*[^()]*\))|^\s*#.*/; // Added variable assignment detection
 
         lines.forEach((line, index) => {
             const lineNumber = index + 1;
@@ -234,6 +235,6 @@ function toggleSidebar() {
     const rendererContainer = document.getElementById('renderer-container');
     rendererContainer.classList.toggle('sidebar');
     rendererContainer.classList.toggle('w-1/2');
-    const rendererObject = document.getElementById('canvas');
+    const rendererObject = document.getElementById('viewport');
     rendererObject.classList.toggle('hide-renderer')
 }

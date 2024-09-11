@@ -582,6 +582,10 @@ video {
   display: flex;
 }
 
+.contents {
+  display: contents;
+}
+
 .h-24 {
   height: 6rem;
 }
@@ -604,6 +608,14 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-1 {
@@ -638,6 +650,10 @@ video {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .overflow-y-auto {
@@ -715,6 +731,11 @@ video {
 
 .font-bold {
   font-weight: 700;
+}
+
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
 }
 
 .text-gray-800 {
